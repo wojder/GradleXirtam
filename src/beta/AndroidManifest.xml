@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity android:name="com.example.wojder.gradlexirtam.BetaActivity"
+            android:label="@string/title_activity_beta"></activity>
+    </application>
+
+</manifest>
