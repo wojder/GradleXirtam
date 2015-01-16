@@ -64,8 +64,8 @@ public class GradleTest extends ActionBarActivity
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
-                Intent intent = new Intent(this, ContinousActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, BetaActivity.class);
+//                startActivity(intent);
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);

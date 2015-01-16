@@ -1,4 +1,14 @@
-apply plugin: 'com.android.application'
+import java.util.regex.Pattern
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+    }
+}
+apply plugin: 'android'
 
 android {
     compileSdkVersion 21
@@ -8,8 +18,8 @@ android {
         applicationId "com.example.wojder.gradlexirtam"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 1
         versionName "1.0"
+
     }
     signingConfigs {
         releaseConfig {
@@ -25,7 +35,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
-//            applicationIdSuffix ".release"
         }
         debug {
             debuggable true;
@@ -38,6 +47,30 @@ android {
         beta {
             applicationId = "com.example.wojder.gradlexirtam.beta"
         }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+task('incrementManifestVersionCode') << {
+        println "Importing Version Code from manifest and autoincrement"
+        def manifestFile = file("src/main/AndroidManifest.xml")
+        def versionCodePattern = Pattern.compile("versionCode=\"(\\d+)\"")
+        def manifestText = manifestFile.getText()
+        def versionCodeMatcher = versionCodePattern.matcher(manifestText)
+        versionCodeMatcher.find()
+        def currentVersionCode = Integer.parseInt(versionCodeMatcher.group(1))
+        def incrementedVersionCode = (currentVersionCode + 1)
+        def manifestContent = versionCodeMatcher.replaceAll("versionCode=\"" + incrementedVersionCode + "\"")
+        manifestFile.write(manifestContent)
+        println sprintf("New versionCode is %s", incrementedVersionCode)
+
+        return incrementedVersionCode
+    }
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleBetaRelease') {
+        task.dependsOn 'incrementManifestVersionCode'
     }
 }
 dependencies {
